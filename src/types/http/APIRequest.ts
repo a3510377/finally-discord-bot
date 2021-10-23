@@ -1,46 +1,31 @@
-import axios from 'axios'
-import { URLSearchParams } from 'url'
-import { Http } from '.'
-import { Client } from '../client'
+import axios, { AxiosRequestHeaders, Method } from "axios"
+import { Http } from "."
 
-export class APIRequest {
-    res: Http
-    client: Client
-    method: string
-    path: string
-    API: string
-    url: string
-    options: { [key: string]: string }
-    constructor(
-        res: Http,
-        method: string,
-        path: string | string[],
-        options: { [key: string]: string } = {}
-    ) {
-        this.res = res
-        this.client = res.client
-        this.method = method
-        this.options = options
+export async function APIRequest(
+  res: Http,
+  method: Method,
+  path: string | string[],
+  options: { [key: string]: string | boolean | number } = {}
+) {
+  const client = res.client
+  const API = client.options.http.API
+  console.log(path)
 
-        if (typeof path !== 'string') path = path.join('/')
+  if (typeof path !== "string") path = path.join("/")
+  path = !path.startsWith("/") ? `/${path}` : path
 
-        let query = ''
-        if (options.query)
-            query = new URLSearchParams(
-                Object.entries(options.query).filter(([key, value]) => key && value)
-            ).toString()
+  const url = API + path
+  let headers = {
+    // @ts-ignore
+    ...options.headers,
+    // "User-Agent": `DiscordBot (, ${client.__version__})`,
+  }
 
-        this.path = (!path.startsWith('/') ? `/${path}` : path) + (query ? `?${query}` : '')
-        this.API = this.client.options.http.API
-        this.url = this.API + this.path
+  if (options.auth !== false) headers["Authorization"] = res.token()
+  if (options.reason) headers["X-Audit-Log-Reason"] = String(options.reason)
+  if (options.data) headers["Content-Type"] = "application/json"
 
-        let henders: { [key: string]: string } = {
-            // @ts-ignore
-            ...this.options.headers,
-            "User-Agent": `DiscordBot (, ${this.client.__version__})`
-        }
+  console.log({ url, method, headers, data: options.data })
 
-        if (this.options.auth) henders.Authorization = this.res.token()
-        if (this.options.reason) henders["X-Audit-Log-Reason"] = this.options.reason
-    }
+  return await axios({ url, method, headers, data: options.data })
 }
