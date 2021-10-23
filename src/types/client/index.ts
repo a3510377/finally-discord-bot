@@ -38,9 +38,3 @@ export class Client {
 
     }
 }
-
-let bot = new Client()
-
-bot.api.use.a.a.a.a
-
-bot.run('')

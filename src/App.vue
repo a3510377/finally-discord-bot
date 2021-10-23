@@ -2,14 +2,8 @@
 
 <script lang='ts'>
 import { defineComponent } from 'vue'
-
 export default defineComponent({
   name: 'HelloWorld',
-  data() {
-    return {
-      test: 'test',
-    }
-  },
 })
 </script>
 
