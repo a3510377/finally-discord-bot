@@ -1,6 +1,6 @@
 {
   "version": "0.0.0",
-  "homepage": "",
+  "homepage": "https://github.com/a3510377/finally-discord-bot",
   "scripts": {
     "dev": "cross-env NODE_ENV=development vite",
     "serve": "vite preview",
