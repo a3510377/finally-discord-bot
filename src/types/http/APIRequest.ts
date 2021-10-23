@@ -1,5 +1,5 @@
-import axios, { AxiosRequestHeaders, Method } from "axios"
-import { Http } from "."
+import axios, { AxiosRequestHeaders, Method } from "axios";
+import { Http } from ".";
 
 export async function APIRequest(
   res: Http,
@@ -7,25 +7,25 @@ export async function APIRequest(
   path: string | string[],
   options: { [key: string]: string | boolean | number } = {}
 ) {
-  const client = res.client
-  const API = client.options.http.API
-  console.log(path)
+  const client = res.client;
+  const API = client.options.http.API;
+  console.log(path);
 
-  if (typeof path !== "string") path = path.join("/")
-  path = !path.startsWith("/") ? `/${path}` : path
+  if (typeof path !== "string") path = path.join("/");
+  path = !path.startsWith("/") ? `/${path}` : path;
 
-  const url = API + path
+  const url = API + path;
   let headers = {
     // @ts-ignore
     ...options.headers,
     // "User-Agent": `DiscordBot (, ${client.__version__})`,
-  }
+  };
 
-  if (options.auth !== false) headers["Authorization"] = res.token()
-  if (options.reason) headers["X-Audit-Log-Reason"] = String(options.reason)
-  if (options.data) headers["Content-Type"] = "application/json"
+  if (options.auth !== false) headers["Authorization"] = res.token();
+  if (options.reason) headers["X-Audit-Log-Reason"] = String(options.reason);
+  if (options.data) headers["Content-Type"] = "application/json";
 
-  console.log({ url, method, headers, data: options.data })
+  console.log({ url, method, headers, data: options.data });
 
-  return await axios({ url, method, headers, data: options.data })
+  return await axios({ url, method, headers, data: options.data });
 }

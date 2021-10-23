@@ -1,15 +1,15 @@
 let t = () => {
-  let data = {}
-  let routers = []
+  let data = {};
+  let routers = [];
   let handler = {
     get(_, name) {
       if (["get"].includes(name))
         return () => {
-          console.log(routers.join("/"))
-        }
-      routers.push(name)
-      return new Proxy(_, handler)
+          console.log(routers.join("/"));
+        };
+      routers.push(name);
+      return new Proxy(_, handler);
     },
-  }
-  return new Proxy(data, handler)
-}
+  };
+  return new Proxy(data, handler);
+};

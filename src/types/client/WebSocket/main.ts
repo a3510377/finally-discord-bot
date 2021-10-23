@@ -1,4 +1,4 @@
-import { ArrayKey } from "../../util/fun"
+import { ArrayKey } from "../../util/fun";
 
 export const WSEvents = ArrayKey([
   "HELLO",
@@ -54,4 +54,4 @@ export const WSEvents = ArrayKey([
   "VOICE_STATE_UPDATE",
   "VOICE_SERVER_UPDATE",
   "WEBHOOKS_UPDATE",
-])
+]);
