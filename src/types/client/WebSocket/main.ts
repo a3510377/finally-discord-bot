@@ -1,5 +1,6 @@
 import { ArrayKey } from "../../util/fun";
 
+/** https://discord.com/developers/docs/topics/gateway#commands-and-events-gateway-events */
 export const WSEvents = ArrayKey([
   "HELLO",
   "READY",
@@ -55,3 +56,21 @@ export const WSEvents = ArrayKey([
   "VOICE_SERVER_UPDATE",
   "WEBHOOKS_UPDATE",
 ]);
+
+/** https://discord.com/developers/docs/topics/opcodes-and-status-codes#gateway-gateway-close-event-codes */
+export const WsCodes: { [key: number]: string } = {
+  4000: "未知錯誤",
+  4001: "未知操作碼",
+  4002: "解碼錯誤",
+  4003: "未認證",
+  4004: "認證失敗",
+  4005: "通過身分認證",
+  4007: "無效 seq",
+  4008: "限速",
+  4009: "超時",
+  4010: "無效分片",
+  4011: "需要分片",
+  4012: "API本版錯誤",
+  4013: "權限格式錯誤",
+  4014: "無權限",
+};

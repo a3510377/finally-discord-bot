@@ -9,10 +9,7 @@ export class Http {
   constructor(client: Client) {
     this.client = client;
   }
-  async request(path: string, method: Method = "GET", options = {}) {
-    return await APIRequest(this, method, path, options);
-  }
-  use(): { [key: string]: any } {
+  use() {
     let data = {};
     let routers: string[] = [];
     let _ = this;
@@ -20,7 +17,7 @@ export class Http {
       get(data_: any, name: string): any {
         if (methods.includes(name.toLocaleLowerCase()))
           return (options: { [key: string]: any }) =>
-            _.request(routers.join("/"), name as Method, options);
+            APIRequest(_, name as Method, routers.join("/"), options);
         routers.push(name);
         return new Proxy(data_, handler);
       },

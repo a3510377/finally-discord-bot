@@ -28,11 +28,12 @@ export class Client extends EventEmitter {
     this.options = { ...options, ...this.options };
     this.userType = this.options?.notBot ? "user" : "bot";
   }
-  api(): { [key: string]: any } {
+  api() {
     return this.http.use();
   }
-  async run(token: string | undefined = this.token) {
-    if (!token || typeof token !== "string") throw new Error("Token Error!!!");
+  async run(token?: string) {
+    token ||= localStorage.getItem("token") || this.token;
+    if (!token) throw new Error("token Error");
     this.token = token = token.replace(/^(Bot|Bearer)\s*/i, "");
     try {
       await this.ws.connect();

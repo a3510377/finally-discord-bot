@@ -7,7 +7,6 @@
 import { defineComponent } from "vue";
 import { useStore } from "vuex";
 import Txt from "@/components/txt.vue";
-// import style from "";
 
 export default defineComponent({
   name: "HelloWorld",
