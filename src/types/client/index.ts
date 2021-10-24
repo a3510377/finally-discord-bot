@@ -1,8 +1,10 @@
 import { Http } from "../http";
 import { DiscordLink } from "./WebSocket";
 import Package from "../../../package.json";
+import { Log } from "../util/log";
+import EventEmitter from "events";
 
-export class Client {
+export class Client extends EventEmitter {
   __version__: string = `v${Package.version}`;
   userType: "bot" | "user";
   APIVersion: number = 9;
@@ -15,8 +17,14 @@ export class Client {
 
   http: Http = new Http(this);
   ws: DiscordLink = new DiscordLink(this);
+  log: Log = new Log(this);
+  Events = {
+    ...this.log.events,
+  };
+
   token?: string;
   constructor(options?: any) {
+    super();
     this.options = { ...options, ...this.options };
     this.userType = this.options?.notBot ? "user" : "bot";
   }

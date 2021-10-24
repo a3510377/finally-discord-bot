@@ -8,6 +8,7 @@ export class DiscordLink extends EventEmitter {
   gateway?: string;
   client: Client;
   url?: string;
+  ws?: WebSocket;
   constructor(client: Client) {
     super();
     this.client = client;
@@ -17,31 +18,27 @@ export class DiscordLink extends EventEmitter {
       await this.client.api().gateway.bot.get()
     ).data;
     this.url = CheckWssUrl(url);
-    console.log(url, shards, session_start_limit);
+
+    this.ws = new WebSocket(this.url);
+    this.ws.onopen = this.onOpen.bind(this);
+    this.ws.onmessage = this.onMessage.bind(this);
+    this.ws.onerror = this.onError.bind(this);
+    this.ws.onclose = this.onClose.bind(this);
+    this.client.emit(this.client.Events.DEBUG, "ws", `${URL}`);
   }
-  onMessage(data: any) {
-    data = data;
-    this.onPacket(data);
+  onClose(): void {}
+  onError(): void {}
+  onOpen(): void {}
+  onMessage(data: MessageEvent<any>): void {
+    this.onPacket.bind(this);
   }
-  onPacket(data: any) {
-    switch (data.t) {
+  onPacket(data: MessageEvent<any>): void {
+    console.log("test");
+
+    switch (data.data.t) {
       case WSEvents.READY:
         this.emit(WSEvents.READY);
         break;
     }
-  }
-}
-
-export class WebSocketShard extends EventEmitter {
-  ws?: WebSocket;
-  constructor() {
-    super();
-  }
-  connect() {
-    const ws = (this.ws = new WebSocket(""));
-    ws.onopen;
-    ws.onmessage;
-    ws.onerror;
-    ws.onclose;
   }
 }
