@@ -15,9 +15,9 @@ export class Client extends EventEmitter {
     },
   };
 
+  log: Log = new Log(this);
   http: Http = new Http(this);
   ws: DiscordLink = new DiscordLink(this);
-  log: Log = new Log(this);
   Events = {
     ...this.log.events,
   };
@@ -43,5 +43,7 @@ export class Client extends EventEmitter {
       throw error;
     }
   }
-  kill() {}
+  kill() {
+    this.removeAllListeners();
+  }
 }

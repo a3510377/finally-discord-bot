@@ -37,6 +37,18 @@ export class Log {
       Allstyle,
     ];
   }
+  DEBUG(...msg: string[]) {
+    this.client.emit(this.client.Events.DEBUG, ...msg);
+  }
+  WARN(...msg: string[]) {
+    this.client.emit(this.client.Events.WARN, ...msg);
+  }
+  ERROR(...msg: string[]) {
+    this.client.emit(this.client.Events.ERROR, ...msg);
+  }
+  LOG(...msg: string[]) {
+    this.client.emit(this.client.Events.LOG, ...msg);
+  }
   removeLog() {}
   private _debug(message: string, ...messages: string[]) {
     console.debug(...this.setMessage("DEBUG", message, messages));

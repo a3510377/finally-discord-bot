@@ -1,5 +1,6 @@
 import axios, { AxiosRequestHeaders, Method } from "axios";
 import { Http } from ".";
+import Package from "@/../package.json";
 
 export async function APIRequest(
   res: Http,
@@ -18,14 +19,12 @@ export async function APIRequest(
   let headers = {
     // @ts-ignore
     ...options.headers,
-    // "User-Agent": `DiscordBot (, ${client.__version__})`,
+    "User-Agent": `DiscordBot (${Package.homepage}, ${client.__version__})`,
   };
 
   if (options.auth !== false) headers["Authorization"] = res.token();
   if (options.reason) headers["X-Audit-Log-Reason"] = String(options.reason);
   if (options.data) headers["Content-Type"] = "application/json";
-
-  console.log({ url, method, headers, data: options.data });
 
   return await axios({ url, method, headers, data: options.data });
 }
