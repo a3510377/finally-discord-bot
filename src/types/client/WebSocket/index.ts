@@ -6,19 +6,27 @@ import { CheckWssUrl } from "@/types/util/fun";
 import { AxiosError } from "axios";
 
 export class DiscordLink extends EventEmitter {
-  gateway?: string;
   client: Client;
   debug: Client["log"]["DEBUG"];
 
+  /** ws連線網址 */
   url?: string;
+  /** ws */
   ws?: WebSocket;
+  /** 請求連線時間 */
   startLinkAt?: number;
-  state: number = 0;
-  HeartbeatingInterval?: number;
+  /** 目前狀態 */
+  state: number = -1;
+  /** 握手定時 */
+  HeartbeatInterval?: number;
+  /** 會話ID */
+  session_id: number | null = null;
+  /** 序列 */
+  sequence: number | null = null;
   constructor(client: Client) {
     super();
     this.client = client;
-    this.debug = this.client.log.DEBUG;
+    this.debug = this.client.log.DEBUG.bind(this);
   }
   async connect() {
     const { url, shards, session_start_limit } = (
@@ -45,7 +53,9 @@ export class DiscordLink extends EventEmitter {
   sendWs(data: { [key: string]: any }): void {
     return this.ws?.send(JSON.stringify(data));
   }
-  onClose(): void {}
+  onClose(): void {
+    this.setHeartbeatInterval(-1);
+  }
   onError(): void {}
   onOpen(): void {
     this.debug(
@@ -55,16 +65,24 @@ export class DiscordLink extends EventEmitter {
   }
   onMessage({ data }: { data: string }): void {
     const json: { [key: string]: any } = JSON.parse(data || "{}");
+    /** 更新序列號  */
+    if (json.s) this.sequence = json.s;
+
+    if (json.t !== "PRESENCE_UPDATE") console.log(json);
+
     switch (json.op) {
       case OpCodes.HELLO:
         this.Identifying();
-    }
-    switch (json.t) {
-      case WSEvents:
-
-      case WSEvents.READY:
-        this.emit(WSEvents.READY);
+        this.setHeartbeatInterval(json.d.heartbeat_interval);
         break;
+      case OpCodes.DISPATCH:
+        switch (json.t) {
+          case WSEvents.READY:
+            this.session_id = json.session_id;
+
+            this.emit(WSEvents.READY);
+            break;
+        }
     }
   }
   /* ----- link fun ----- */
@@ -88,10 +106,18 @@ export class DiscordLink extends EventEmitter {
   }
   /** 重新連線 */
   Resuming() {}
+  /** 回復心跳 */
+  Heartbeat() {
+    this.debug("ws", "發送心跳確認");
+    this.sendWs({ op: 1, d: this.sequence });
+  }
   /* ----- fun ----- */
-  setHeartbeatingInterval(delay: number) {
-    if (this.HeartbeatingInterval) clearInterval(this.HeartbeatingInterval);
+  setHeartbeatInterval(delay: number) {
+    if (this.HeartbeatInterval) clearInterval(this.HeartbeatInterval);
     if (delay === -1) return;
-    this.HeartbeatingInterval = window.setInterval(() => {}, delay);
+    this.HeartbeatInterval = window.setInterval(
+      () => this.Heartbeat(),
+      delay - 1e3
+    );
   }
 }

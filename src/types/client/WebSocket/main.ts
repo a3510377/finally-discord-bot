@@ -75,6 +75,7 @@ export const WsCodes: { [key: number]: string } = {
   4014: "無權限",
 };
 
+/** https://discord.com/developers/docs/topics/opcodes-and-status-codes#gateway-gateway-opcodes */
 export const OpCodes = {
   DISPATCH: 0,
   HEARTBEAT: 1,

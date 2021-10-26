@@ -3,6 +3,8 @@ import { DiscordLink } from "./WebSocket";
 import Package from "../../../package.json";
 import { Log } from "../util/log";
 import EventEmitter from "events";
+import { ClientGuilds } from "./Bot/ClientGuilds";
+import { ClientUser } from "./Bot/ClientUser";
 
 export class Client extends EventEmitter {
   __version__: string = `v${Package.version}`;
@@ -14,9 +16,13 @@ export class Client extends EventEmitter {
       version: this.APIVersion,
     },
   };
-
   log: Log = new Log(this);
   http: Http = new Http(this);
+
+  /* bot data */
+  guilds: ClientGuilds = new ClientGuilds(this);
+  user: ClientUser = new ClientUser(this);
+
   ws: DiscordLink = new DiscordLink(this);
   Events = {
     ...this.log.events,
