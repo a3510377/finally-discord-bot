@@ -39,7 +39,8 @@ export class DiscordLink extends EventEmitter {
             : reason;
         })
     ).data;
-    this.url = CheckWssUrl(url);
+    (this.client.options.ws ||= {}).url ||= url;
+    this.url = CheckWssUrl(this.client.options.ws.url);
     this.url += `?encoding=json&v=${this.client.options.http.version}`;
 
     this.startLinkAt = Date.now();
@@ -83,6 +84,8 @@ export class DiscordLink extends EventEmitter {
             this.emit(WSEvents.READY);
             break;
         }
+      case OpCodes.HEARTBEAT:
+        break;
     }
   }
   /* ----- link fun ----- */
