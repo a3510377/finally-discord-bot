@@ -10,7 +10,7 @@ export class DiscordLink extends EventEmitter {
   debug: Client["log"]["DEBUG"];
 
   /** ws連線網址 */
-  url?: string;
+  gateway?: string;
   /** ws */
   ws?: WebSocket;
   /** 請求連線時間 */
@@ -36,15 +36,16 @@ export class DiscordLink extends EventEmitter {
         .catch((reason: AxiosError) => {
           throw (reason.request ||= reason.response)?.status === 401
             ? new Error(WsCodes[4004])
-            : reason;
+            : reason.request || reason.response;
         })
     ).data;
     (this.client.options.ws ||= {}).url ||= url;
-    this.url = CheckWssUrl(this.client.options.ws.url);
-    this.url += `?encoding=json&v=${this.client.options.http.version}`;
+    this.gateway = CheckWssUrl(this.client.options.ws.url);
+    this.gateway += `?encoding=json&v=${this.client.options.http.version}`;
 
     this.startLinkAt = Date.now();
-    this.ws = new WebSocket(this.url);
+    /* readonly */
+    this.ws = new WebSocket(this.gateway);
     this.ws.onopen = this.onOpen.bind(this);
     this.ws.onmessage = this.onMessage.bind(this);
     this.ws.onerror = this.onError.bind(this);
@@ -61,11 +62,11 @@ export class DiscordLink extends EventEmitter {
   onOpen(): void {
     this.debug(
       "ws",
-      `連線延遲: ${Date.now() - (this.startLinkAt as number)}ms`
+      `連線時間: ${Date.now() - (this.startLinkAt as number)}ms`
     );
   }
-  onMessage({ data }: { data: string }): void {
-    const json: { [key: string]: any } = JSON.parse(data || "{}");
+  onMessage(ev: MessageEvent<any>): void {
+    const json: { [key: string]: any } = JSON.parse(ev.data || "{}");
     /** 更新序列號  */
     if (json.s) this.sequence = json.s;
 
@@ -85,6 +86,10 @@ export class DiscordLink extends EventEmitter {
             break;
         }
       case OpCodes.HEARTBEAT:
+        break;
+    }
+    switch (json.t) {
+      case WSEvents.READY:
         break;
     }
   }

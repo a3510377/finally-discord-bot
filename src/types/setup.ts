@@ -1,5 +1,9 @@
-class setupFuns {
-  constructor() {}
-}
+import { Client } from "./client";
+import { SnowflakeTool } from "./util/snowflake";
 
-export default new setupFuns();
+export default () => {
+  Object.assign(window, {
+    Client,
+    SnowflakeTool,
+  });
+};

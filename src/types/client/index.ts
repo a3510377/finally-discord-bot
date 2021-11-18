@@ -3,8 +3,7 @@ import { DiscordLink } from "./WebSocket";
 import Package from "../../../package.json";
 import { Log } from "../util/log";
 import EventEmitter from "events";
-import { ClientGuilds } from "./Bot/ClientGuilds";
-import { ClientUser } from "./Bot/ClientUser";
+import { ConnectionState } from "./Bot/ConnectionState";
 
 export class Client extends EventEmitter {
   __version__: string = `v${Package.version}`;
@@ -20,8 +19,7 @@ export class Client extends EventEmitter {
   http: Http = new Http(this);
 
   /* bot data */
-  guilds: ClientGuilds = new ClientGuilds(this);
-  user: ClientUser = new ClientUser(this);
+  _connection = new ConnectionState(this);
 
   ws: DiscordLink = new DiscordLink(this);
   Events = {
@@ -33,6 +31,12 @@ export class Client extends EventEmitter {
     super();
     this.options = { ...options, ...this.options };
     this.userType = this.options?.notBot ? "user" : "bot";
+  }
+  guilds() {
+    return this._connection.guilds;
+  }
+  emojis() {
+    return this._connection.emojis;
   }
   api() {
     return this.http.use();

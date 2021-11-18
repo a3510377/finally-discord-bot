@@ -22,19 +22,19 @@ export class Log {
   }
   setMessage(type: string, message: string, messages: string[]): string[] {
     let _type = {
-      log: { name: "日誌", color: "chartreuse" },
-      debug: { name: "除錯", color: "chartreuse" },
-      warn: { name: "警告", color: "yellow" },
-      error: { name: "錯誤", color: "red" },
-    }[type.toLocaleLowerCase()];
-    let Allstyle =
+      WARN: { name: "警告", color: "yellow" },
+      ERROR: { name: "錯誤", color: "red" },
+      LOG: { name: "日誌", color: "chartreuse" },
+      DEBUG: { name: "除錯", color: "chartreuse" },
+    }[type.toUpperCase()];
+    let AllStyle =
       "background-color: black;color: white;font-size: 120%;padding: 2px";
     return [
       `%c[%c${_type?.name || type}%c]: ` +
         (messages ? `${message} --> ${messages.join(" ")}` : message),
-      Allstyle,
-      `font-weight: 900;color: ${_type?.color}!important;${Allstyle}`,
-      Allstyle,
+      AllStyle,
+      `font-weight: 900;color: ${_type?.color}!important;${AllStyle}`,
+      AllStyle,
     ];
   }
   DEBUG(...msg: string[]) {
@@ -49,17 +49,16 @@ export class Log {
   LOG(...msg: string[]) {
     this.client.emit(this.client.Events.LOG, ...msg);
   }
-  removeLog() {}
-  private _debug(message: string, ...messages: string[]) {
+  protected _debug(message: string, ...messages: string[]) {
     console.debug(...this.setMessage("DEBUG", message, messages));
   }
-  private _error(message: string, ...messages: string[]) {
+  protected _error(message: string, ...messages: string[]) {
     console.error(...this.setMessage("ERROR", message, messages));
   }
-  private _warn(message: string, ...messages: string[]) {
+  protected _warn(message: string, ...messages: string[]) {
     console.warn(...this.setMessage("WARN", message, messages));
   }
-  private _log(message: string, ...messages: string[]) {
+  protected _log(message: string, ...messages: string[]) {
     console.log(...this.setMessage("LOG", message, messages));
   }
 }
