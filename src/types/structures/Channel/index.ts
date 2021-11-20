@@ -1,5 +1,5 @@
 import { Client } from "@/types/client";
-import { ChannelType } from "@/types/util/data";
+import { ChannelType } from "@/types/util/enum";
 import { SnowflakeTool } from "@/types/util/snowflake";
 import { Base } from "../Base";
 import { ChannelStructure } from "./structures";
