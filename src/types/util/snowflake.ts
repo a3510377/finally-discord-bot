@@ -11,10 +11,10 @@ export class SnowflakeTool {
     const BINARY = idToBinary(snowflake).toString().padStart(64, "0");
     return {
       binary: BINARY,
-      workerId: "",
-      processId: "",
-      increment: "",
-      timestamp: "",
+      workerId: parseInt(BINARY.substring(42, 47), 2),
+      processId: parseInt(BINARY.substring(47, 52), 2),
+      increment: parseInt(BINARY.substring(52, 64), 2),
+      timestamp: parseInt(BINARY.substring(0, 42), 2) + EPOCH,
       get date() {
         return new Date(this.timestamp);
       },

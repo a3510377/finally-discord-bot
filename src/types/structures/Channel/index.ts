@@ -11,9 +11,11 @@ export class Channel extends Base {
   deleted: boolean = false;
   /* id */
   id: string;
+  data: ChannelStructure;
   constructor(client: Client, data: ChannelStructure) {
     super(client);
     // data["type"]
+    this.data = data;
     this.setType(data["type"]);
     this.id = data.id;
   }
@@ -23,7 +25,7 @@ export class Channel extends Base {
   }
   /* 是否為DM channel */
   get isDm(): boolean {
-    return false;
+    return this.type === ChannelType[1];
   }
   async delete(): Promise<this> {
     await this.client.api().channels[this.id].delete();
