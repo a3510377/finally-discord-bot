@@ -1,4 +1,5 @@
 import { Client } from "@/types/client";
+
 /**Snowflakes
  * @url https://discord.com/developers/docs/reference#snowflakes
  */
@@ -14,8 +15,5 @@ export declare type DIS = null | undefined;
 
 /**Discord API data models */
 export class Base {
-  client: Client;
-  constructor(client: Client) {
-    this.client = client;
-  }
+  constructor(public client: Client) {}
 }

@@ -22,7 +22,7 @@ export async function APIRequest(
     "User-Agent": `DiscordBot (${Package.homepage}, ${client.__version__})`,
   };
 
-  if (options.auth !== false) headers["Authorization"] = res.token();
+  if (options.auth !== false) headers["Authorization"] = res.toToken();
   if (options.reason) headers["X-Audit-Log-Reason"] = String(options.reason);
   if (options.data) headers["Content-Type"] = "application/json";
 

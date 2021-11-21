@@ -5,10 +5,7 @@ import { APIRequest } from "./APIRequest";
 const methods = ["get", "post", "delete", "patch", "put"];
 
 export class Http {
-  client: Client;
-  constructor(client: Client) {
-    this.client = client;
-  }
+  constructor(public client: Client) {}
   use() {
     let data = {};
     let routers: string[] = [];
@@ -24,7 +21,7 @@ export class Http {
     };
     return new Proxy(data, handler);
   }
-  token(): string {
+  toToken(): string {
     let token = this.client.token;
     if (this.client.options?.notBot) return `Bearer ${token}`;
     return `Bot ${token}`;

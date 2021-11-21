@@ -1,15 +1,13 @@
 import { Client } from "../client";
 
 export class Log {
-  client: Client;
   events = {
     ERROR: "LOG_ERROR",
     DEBUG: "LOG_DEBUG",
     WARN: "LOG_WARN",
     LOG: "LOG_LOG",
   };
-  constructor(client: Client) {
-    this.client = client;
+  constructor(public client: Client) {
     const { ERROR, DEBUG, WARN, LOG } = client.options?.log || {};
 
     for (let [key, value] of Object.entries({

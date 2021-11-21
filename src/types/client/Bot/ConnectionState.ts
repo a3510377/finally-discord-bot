@@ -4,7 +4,7 @@ export class ConnectionState {
   private _guilds: { [id: string]: any } = {};
   private _users = [];
   private _emojis = [];
-  constructor(client: Client) {}
+  constructor(public client: Client) {}
   /* guilds */
   /* TODO:　型別 */
   /** 回傳 guilds */
