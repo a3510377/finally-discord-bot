@@ -7,6 +7,3 @@ export function ArrayKey<T>(atr: T[]) {
 export function CheckWssUrl(url: string): string {
   return !url.startsWith("wss://") && (url = `wss://${url}`), url;
 }
-let t = ArrayKey(["awa", "awaa"]);
-t.awa;
-let a: ("a" | "b")[];

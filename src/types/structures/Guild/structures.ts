@@ -1,4 +1,4 @@
-import { ISO8601, DIS, snowflake } from "../Base";
+import { ISO8601, DIS, snowflake } from "..";
 
 /**
  * @url https://discord.com/developers/docs/resources/guild#guild-object-guild-features
@@ -47,6 +47,7 @@ export interface GuildStructure {
   explicit_content_filter: number;
   // roles	array of role objects
   // emojis	array of emoji objects
+  features: GuildFeatures[];
   // features	array of guild feature strings
   // mfa_level	integer
   // application_id	?snowflake

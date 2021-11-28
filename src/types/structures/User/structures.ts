@@ -1,4 +1,4 @@
-import { ISO8601, DIS, snowflake } from "../Base";
+import { ISO8601, DIS, snowflake } from "..";
 
 /**User Structure 結構
  * @url https://discord.com/developers/docs/resources/user#user-object-user-structure

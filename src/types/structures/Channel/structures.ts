@@ -1,4 +1,4 @@
-import { ISO8601, DIS, snowflake } from "../Base";
+import { ISO8601, DIS, snowflake } from "..";
 import { UserStructure } from "../User/structures";
 
 /**Overwrite 結構

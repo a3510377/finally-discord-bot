@@ -4,6 +4,8 @@ import { Client } from "../index";
 import { OpCodes, WsCodes, WSEvents } from "./main";
 import { CheckWssUrl } from "@/types/util/fun";
 import { AxiosError } from "axios";
+import { JsonAny } from "@/types/structures";
+import { GatewayPayloadStructure } from "./structures";
 
 export class DiscordLink extends EventEmitter {
   client: Client;
@@ -39,6 +41,7 @@ export class DiscordLink extends EventEmitter {
             : reason.request || reason.response;
         })
     ).data;
+    console.log(url, shards, session_start_limit);
     (this.client.options.ws ||= {}).url ||= url;
     this.gateway = CheckWssUrl(this.client.options.ws.url);
     this.gateway += `?encoding=json&v=${this.client.options.http.version}`;
@@ -52,21 +55,23 @@ export class DiscordLink extends EventEmitter {
     this.ws.onclose = this.onClose.bind(this);
     this.debug("ws", `\n\tdc_ws_url: ${url}\n`);
   }
-  sendWs(data: { [key: string]: any }): void {
+  sendWs(data: JsonAny): void {
     return this.ws?.send(JSON.stringify(data));
   }
   onClose(): void {
+    this.gateway && (this.ws = new WebSocket(this.gateway));
     this.setHeartbeatInterval(-1);
+    this.debug("ws", "\n\tdc_ws掉線");
   }
   onError(): void {}
   onOpen(): void {
     this.debug(
       "ws",
-      `連線時間: ${Date.now() - (this.startLinkAt as number)}ms`
+      `連線完成耗時: ${Date.now() - (this.startLinkAt as number)}ms`
     );
   }
   onMessage(ev: MessageEvent<any>): void {
-    const json: { [key: string]: any } = JSON.parse(ev.data || "{}");
+    const json: GatewayPayloadStructure = JSON.parse(ev.data || "{}");
     /** 更新序列號  */
     if (json.s) this.sequence = json.s;
 
@@ -75,12 +80,12 @@ export class DiscordLink extends EventEmitter {
     switch (json.op) {
       case OpCodes.HELLO:
         this.Identifying();
-        this.setHeartbeatInterval(json.d.heartbeat_interval);
+        this.setHeartbeatInterval(json.d?.heartbeat_interval as number);
         break;
       case OpCodes.DISPATCH:
         switch (json.t) {
           case WSEvents.READY:
-            this.session_id = json.session_id;
+            this.session_id = json.d?.session_id as number;
 
             this.emit(WSEvents.READY);
             break;

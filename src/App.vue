@@ -15,7 +15,9 @@ export default defineComponent({
   name: "HelloWorld",
   setup() {
     const store = useStore();
-    Object.assign(window, { client: store.state.botModules.client });
+    let client = store.state.botModules.client;
+    Object.assign(window, { client });
+    client.run("");
   },
   components: {
     Txt,
