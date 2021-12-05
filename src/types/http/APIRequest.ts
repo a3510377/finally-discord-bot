@@ -8,6 +8,8 @@ export async function APIRequest(
   path: string | string[],
   options: { [key: string]: string | boolean | number } = {}
 ) {
+  console.log(options);
+
   const client = res.client;
   const API = client.options.http.API;
   console.log(path);

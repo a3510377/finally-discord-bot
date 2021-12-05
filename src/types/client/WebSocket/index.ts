@@ -5,7 +5,7 @@ import { OpCodes, WsCodes, WSEvents } from "./main";
 import { CheckWssUrl } from "@/types/util/fun";
 import { AxiosError } from "axios";
 import { JsonAny } from "@/types/structures";
-import { GatewayPayloadStructure } from "./structures";
+import { GatewayPayloadStructure } from "@/types/structures/gateway";
 
 export class DiscordLink extends EventEmitter {
   client: Client;
